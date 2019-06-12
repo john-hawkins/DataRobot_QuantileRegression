@@ -1,5 +1,6 @@
 # IMPORT THE FILE: QuantileRegression.py
 import QuantileRegression as qr
+import datarobot as dr
 import pandas as pd
 
 # ###################################################################################################
@@ -24,16 +25,26 @@ test_df = df.loc[len(df)-10:,]
 
 # JUST USE 10K FOR THIS EXAMPLE
 # train_df = df.loc[0:len(df)-11,]
-train_df = df.loc[0:10000,]
+train_df = df.loc[0:2000,]
 
-quants = qr.create_quantiles(train_df, target, granularity)
+quants = qr.generate_quantile_values(train_df, target, granularity)
 
 training = qr.build_quantile_regression_dataset(train_df, target, quant_target, unique_index, quants)
 
 # THIS CAN TAKE A WHILE AND WILL BLOCK EXECUTION
 # TODO: CREATE A VERSION THAT RETURNS AND PROVIDES A POLLING FUNCTION
 
-qr.run_quantile_regression(training, proj_name, quant_target, unique_index, 4)
+project = qr.run_quantile_regression(training, proj_name, quant_target, unique_index, 20)
+
+project_id = '5d00545dd9436e06620c7bd7'
+project = dr.Project.get( project_id )
+
+scored = qr.score_quantiles( test_df, project, unique_index, quants, quant_target )
+
+desired_quantiles = [0.1, 0.9]
+
+results = get_predicted_quantiles( test_df, project, unique_index, quants, desired_quantiles )
+
 
 
 
