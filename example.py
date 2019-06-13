@@ -38,6 +38,12 @@ desired_quantiles = [0.2, 0.8]
 
 results = qr.get_predicted_quantiles( test_df, project, unique_index, quants, desired_quantiles )
 
-print tabulate( results.loc[:,["claim_cost","Quantile_0.1","Quantile_0.9"]], headers=['Claim Cost', 'Lower Quantile', 'Upper Quantile'], tablefmt='orgtbl' )
+print( 
+    tabulate( 
+        results.loc[:,["claim_cost","Quantile_0.2","Quantile_0.8"]], 
+        headers=['Claim Cost', 'Lower Quantile', 'Upper Quantile'], tablefmt='orgtbl' 
+    )
+)
+
 
 
