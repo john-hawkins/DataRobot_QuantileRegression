@@ -124,12 +124,12 @@ def score_quantiles( df, project, unique_index, quantiles ):
 def get_predicted_quantiles( df, project, unique_index, quantiles, desired_quantiles ):
     results = df.copy()
     # RETRIEVE THE RAW PROBABILITY SCORES
-    scored = score_quantile_regression( df, project, unique_index, quantiles, quant_target ) 
+    scored = score_quantiles( df, project, unique_index, quantiles ) 
     # NOW GROUP BY THE UNIQUE INDEX AND CALCULATE THE QUANTILE VALUES AT THE REQUIRED POINTS ON THE DISTRIBUTION 
-    grpd = scored.group_by(unique_index)
+    grpd = scored.groupby(unique_index)
     for quant in desired_quantiles:
         col_name= "Quantile_" + str(quant)
-        this_quant = grouped.apply( lambda x: min( x[ x['prediction'] >= quant ]['quantile'] ) )
+        this_quant = grpd.apply( lambda x: min( x[ x['prediction'] >= quant ]['quantile'] ) )
         results[col_name] = this_quant.values
     return results
 
